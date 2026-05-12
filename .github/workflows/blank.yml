@@ -1,0 +1,8 @@
+name: s3 bucket
+on: push
+jobs:
+  job1:
+     runs-on: ubuntu-latest
+     steps:
+       - name: This is the code
+         run: echo "This is running"
