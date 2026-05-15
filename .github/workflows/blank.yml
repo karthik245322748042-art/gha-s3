@@ -23,7 +23,7 @@ jobs:
       - name: Ask Gemini what went wrong
         if: steps.run_tests.outcome == 'failure'
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINIAPI }}
         run: |
           echo "Tests failed on branch ${{ github.ref_name }} by ${{ github.actor }}" | python ai_helper.py
 
