@@ -1,21 +1,32 @@
-name: Deploy HTML to S3
+name: AI Powered Pipeline
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_CODE }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
-          aws-region: ap-south-2
+      - name: Install pytest
+        run: pip install pytest
 
-      - name: Upload index.html to S3
-        run: aws s3 cp index.html s3://gha-bucket-demo-42/index.html
+      - name: Run tests
+        id: run_tests
+        run: pytest test_app.py -v
+        continue-on-error: true
+
+      - name: Ask Gemini what went wrong
+        if: steps.run_tests.outcome == 'failure'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "Tests failed on branch ${{ github.ref_name }} by ${{ github.actor }}" | python ai_helper.py
+
+      - name: Fail the job
+        if: steps.run_tests.outcome == 'failure'
+        run: exit 1
