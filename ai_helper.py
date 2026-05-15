@@ -19,7 +19,7 @@ payload = {
 }
 
 api_key = os.environ["GEMINI_API_KEY"]
-url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={api_key}""
 
 # Try 3 times with a wait in between
 for attempt in range(3):
